@@ -1,28 +1,47 @@
+import { useState } from "react";
+import { postData } from "../raw-data/post-data";
 function Posts() {
+  const [countLike, setCountlike] = useState(postData.map(post => post.likes));
+  const handleLike = (index) => {
+    const newLikes = [...countLike]; // copy ของ likes
+    newLikes[index] += 1;        // เพิ่มไลก์ที่ตำแหน่ง index นั้น
+    setCountlike(newLikes);          // อัปเดต state
+  };
+  const handleDislike = (index) => {
+    const newLikes = [...countLike];
+    if (newLikes[index] !== 0) {
+      newLikes[index] -= 1;
+    }
+    setCountlike(newLikes);
+  };
+
+  
   return (
     <div class="app-wrapper">
       <h1 class="app-title">Posts</h1>
       <div class="post-list">
-        <div class="post-item">
-          <div class="post-header">
-            <h2>Post Title #1</h2>
-            <div class="post-social-media-stats">
-              <span class="stats-topic">Likes: </span>
-              <span class="post-likes">10</span>
+        {postData.map((post, index) => {
+          return (
+            <div class="post-item" key={post.id}>
+              <div class="post-header">
+                <h2>{post.title}</h2>
+                <div class="post-social-media-stats">
+                  <span class="stats-topic">Likes: </span>
+                  <span class="post-likes">{countLike[index]}</span>
+                </div>
+              </div>
+              <p class="post-content">{post.content}</p>
+              <div class="post-actions">
+                <button class="like-button" onClick={()=> handleLike(index)}>
+                  Like
+                </button>
+                <button class="dislike-button" onClick= {()=> handleDislike(index)}>
+                  Dislike
+                </button>
+              </div>
             </div>
-          </div>
-          <p class="post-content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-            vel turpis vestibulum, aliquet ipsum vitae, auctor risus. Morbi
-            tincidunt, leo non molestie consectetur, elit libero faucibus
-            tellus, sed fringilla tortor libero sit amet odio. Maecenas sed ante
-            condimentum mauris euismod pellentesque eu eu justo...
-          </p>
-          <div class="post-actions">
-            <button class="like-button">Like</button>
-            <button class="dislike-button">Dislike</button>
-          </div>
-        </div>
+          );
+        })}
       </div>
     </div>
   );
